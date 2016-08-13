@@ -1,0 +1,3 @@
+const PLACES_API_KEY = 'AIzaSyD38YQgwBJx442-PAl-7VQRXkeNMRpCS4Y';
+
+export default PLACES_API_KEY;
