@@ -57,9 +57,13 @@
 	
 	var _reactDom = __webpack_require__(/*! react-dom */ 35);
 	
-	var _main = __webpack_require__(/*! ./main.jsx */ 175);
+	var _SearchFields = __webpack_require__(/*! ./SearchFields.jsx */ 175);
 	
-	var _main2 = _interopRequireDefault(_main);
+	var _SearchFields2 = _interopRequireDefault(_SearchFields);
+	
+	var _MapCanvas = __webpack_require__(/*! ./MapCanvas.jsx */ 176);
+	
+	var _MapCanvas2 = _interopRequireDefault(_MapCanvas);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -72,10 +76,17 @@
 	var App = function (_React$Component) {
 	  _inherits(App, _React$Component);
 	
-	  function App() {
+	  function App(props) {
 	    _classCallCheck(this, App);
 	
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(App).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
+	
+	    _this.state = {
+	      keyword: '',
+	      address: '',
+	      radius: '500'
+	    };
+	    return _this;
 	  }
 	
 	  _createClass(App, [{
@@ -84,13 +95,13 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement('div', { id: 'gmap_canvas' }),
 	        _react2.default.createElement(
-	          'p',
+	          'h1',
 	          null,
-	          'This is index.js'
+	          'Find places!'
 	        ),
-	        _react2.default.createElement(_main2.default, null)
+	        _react2.default.createElement(_SearchFields2.default, null),
+	        _react2.default.createElement(_MapCanvas2.default, null)
 	      );
 	    }
 	  }]);
@@ -22030,15 +22041,15 @@
 
 /***/ },
 /* 175 */
-/*!*********************************!*\
-  !*** ./src/client/app/main.jsx ***!
-  \*********************************/
+/*!*****************************************!*\
+  !*** ./src/client/app/SearchFields.jsx ***!
+  \*****************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -22055,152 +22066,218 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var Main = function (_React$Component) {
-	    _inherits(Main, _React$Component);
+	// import { searchPlacesByText } from '../lib/placesAPI.jsx';
 	
-	    function Main(props) {
-	        _classCallCheck(this, Main);
+	var SearchFields = function (_React$Component) {
+	  _inherits(SearchFields, _React$Component);
 	
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Main).call(this, props));
+	  function SearchFields(props) {
+	    _classCallCheck(this, SearchFields);
+	
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SearchFields).call(this, props));
+	
+	    _this.state = {
+	      keyword: '',
+	      address: '',
+	      radius: '500'
+	    };
+	    return _this;
+	  }
+	
+	  _createClass(SearchFields, [{
+	    key: 'handleKeywordChange',
+	    value: function handleKeywordChange(e) {
+	      this.setState({ keyword: e.target.value });
 	    }
+	  }, {
+	    key: 'handleAddressChange',
+	    value: function handleAddressChange(e) {
+	      this.setState({ address: e.target.value });
+	    }
+	  }, {
+	    key: 'handleRadiusChange',
+	    value: function handleRadiusChange(e) {
+	      this.setState({ radius: e.target.value });
+	    }
+	  }, {
+	    key: 'handleSubmit',
+	    value: function handleSubmit(e) {
+	      e.preventDefault();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'actions' },
+	        _react2.default.createElement(
+	          'form',
+	          { className: 'gmap_form', onSubmit: this.handleSubmit.bind(this) },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'button' },
+	            _react2.default.createElement(
+	              'label',
+	              { htmlFor: 'gmap_keyword' },
+	              'Keyword (optional):'
+	            ),
+	            _react2.default.createElement('input', { id: 'gmap_keyword', type: 'text', name: 'gmap_keyword', onChange: this.handleKeywordChange.bind(this) })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'button' },
+	            _react2.default.createElement(
+	              'label',
+	              { htmlFor: 'gmap_where' },
+	              'Near:'
+	            ),
+	            _react2.default.createElement('input', { id: 'gmap_where', type: 'text', name: 'gmap_where', onChange: this.handleAddressChange.bind(this) })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'button' },
+	            _react2.default.createElement(
+	              'label',
+	              { htmlFor: 'gmap_radius' },
+	              'Radius:'
+	            ),
+	            _react2.default.createElement(
+	              'select',
+	              { id: 'gmap_radius', onChange: this.handleRadiusChange.bind(this) },
+	              _react2.default.createElement(
+	                'option',
+	                { value: '500', defaultValue: true },
+	                '500'
+	              ),
+	              _react2.default.createElement(
+	                'option',
+	                { value: '1000' },
+	                '1000'
+	              ),
+	              _react2.default.createElement(
+	                'option',
+	                { value: '1500' },
+	                '1500'
+	              ),
+	              _react2.default.createElement(
+	                'option',
+	                { value: '5000' },
+	                '5000'
+	              )
+	            )
+	          ),
+	          _react2.default.createElement('input', { type: 'submit', value: 'Search' })
+	        )
+	      );
+	    }
+	  }]);
 	
-	    _createClass(Main, [{
-	        key: "render",
-	        value: function render() {
-	            return _react2.default.createElement(
-	                "div",
-	                { className: "actions" },
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "button" },
-	                    _react2.default.createElement(
-	                        "label",
-	                        { htmlFor: "gmap_where" },
-	                        "Where:"
-	                    ),
-	                    _react2.default.createElement("input", { id: "gmap_where", type: "text", name: "gmap_where" })
-	                ),
-	                _react2.default.createElement(
-	                    "div",
-	                    { id: "button2", className: "button", onclick: "findAddress(); return false;" },
-	                    "Search for address"
-	                ),
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "button" },
-	                    _react2.default.createElement(
-	                        "label",
-	                        { htmlFor: "gmap_keyword" },
-	                        "Keyword (optional):"
-	                    ),
-	                    _react2.default.createElement("input", { id: "gmap_keyword", type: "text", name: "gmap_keyword" })
-	                ),
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "button" },
-	                    _react2.default.createElement(
-	                        "label",
-	                        { htmlFor: "gmap_type" },
-	                        "Type:"
-	                    ),
-	                    _react2.default.createElement(
-	                        "select",
-	                        { id: "gmap_type" },
-	                        _react2.default.createElement(
-	                            "option",
-	                            { value: "art_gallery" },
-	                            "art_gallery"
-	                        ),
-	                        _react2.default.createElement(
-	                            "option",
-	                            { value: "atm" },
-	                            "atm"
-	                        ),
-	                        _react2.default.createElement(
-	                            "option",
-	                            { value: "bank" },
-	                            "bank"
-	                        ),
-	                        _react2.default.createElement(
-	                            "option",
-	                            { value: "bar" },
-	                            "bar"
-	                        ),
-	                        _react2.default.createElement(
-	                            "option",
-	                            { value: "cafe" },
-	                            "cafe"
-	                        ),
-	                        _react2.default.createElement(
-	                            "option",
-	                            { value: "food" },
-	                            "food"
-	                        ),
-	                        _react2.default.createElement(
-	                            "option",
-	                            { value: "hospital" },
-	                            "hospital"
-	                        ),
-	                        _react2.default.createElement(
-	                            "option",
-	                            { value: "police" },
-	                            "police"
-	                        ),
-	                        _react2.default.createElement(
-	                            "option",
-	                            { value: "store" },
-	                            "store"
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "button" },
-	                    _react2.default.createElement(
-	                        "label",
-	                        { htmlFor: "gmap_radius" },
-	                        "Radius:"
-	                    ),
-	                    _react2.default.createElement(
-	                        "select",
-	                        { id: "gmap_radius" },
-	                        _react2.default.createElement(
-	                            "option",
-	                            { value: "500" },
-	                            "500"
-	                        ),
-	                        _react2.default.createElement(
-	                            "option",
-	                            { value: "1000" },
-	                            "1000"
-	                        ),
-	                        _react2.default.createElement(
-	                            "option",
-	                            { value: "1500" },
-	                            "1500"
-	                        ),
-	                        _react2.default.createElement(
-	                            "option",
-	                            { value: "5000" },
-	                            "5000"
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement("input", { type: "hidden", id: "lat", name: "lat", value: "40.7143528" }),
-	                _react2.default.createElement("input", { type: "hidden", id: "lng", name: "lng", value: "-74.0059731" }),
-	                _react2.default.createElement(
-	                    "div",
-	                    { id: "button1", className: "button", onClick: "findPlaces(); return false;" },
-	                    "Search for objects"
-	                )
-	            );
-	        }
-	    }]);
-	
-	    return Main;
+	  return SearchFields;
 	}(_react2.default.Component);
 	
-	exports.default = Main;
+	exports.default = SearchFields;
+
+/***/ },
+/* 176 */
+/*!**************************************!*\
+  !*** ./src/client/app/MapCanvas.jsx ***!
+  \**************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var MapCanvas = function (_React$Component) {
+	  _inherits(MapCanvas, _React$Component);
+	
+	  function MapCanvas(props) {
+	    _classCallCheck(this, MapCanvas);
+	
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(MapCanvas).call(this, props));
+	  }
+	
+	  _createClass(MapCanvas, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      var san_francisco = new google.maps.LatLng(37.773972, -122.431297);
+	
+	      this.map = new google.maps.Map(document.getElementById('gmap_canvas'), {
+	        center: san_francisco,
+	        zoom: 15
+	      });
+	
+	      var request = {
+	        location: san_francisco,
+	        radius: '500',
+	        query: 'restaurant'
+	      };
+	
+	      var callback = function callback(results, status) {
+	        if (status == google.maps.places.PlacesServiceStatus.OK) {
+	          for (var i = 0; i < results.length; i++) {
+	            var place = results[i];
+	            console.log('PLACE: ', place);
+	            _this2.createMarker(results[i]);
+	          }
+	        }
+	      };
+	
+	      // let service = new google.maps.places.PlacesService(this.map);
+	      // service.textSearch(request, callback.bind(this));
+	    }
+	  }, {
+	    key: 'createMarker',
+	    value: function createMarker(obj) {
+	      // prepare new Marker object
+	      var mark = new google.maps.Marker({
+	        position: obj.geometry.location,
+	        map: this.map,
+	        title: obj.name
+	      });
+	      // markers.push(mark);
+	
+	      // prepare info window
+	      var infowindow = new google.maps.InfoWindow({
+	        content: '<img src="' + obj.icon + '" /><font style="color:#000;">' + obj.name + '<br />Rating: ' + obj.rating + '<br />Vicinity: ' + obj.vicinity + '</font>'
+	      });
+	
+	      // add event handler to current marker
+	      google.maps.event.addListener(mark, 'click', function () {
+	        //     clearInfos();
+	        infowindow.open(this.map, mark);
+	      });
+	      // infos.push(infowindow);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement('div', { id: 'gmap_canvas' });
+	    }
+	  }]);
+	
+	  return MapCanvas;
+	}(_react2.default.Component);
+	
+	exports.default = MapCanvas;
 
 /***/ }
 /******/ ]);

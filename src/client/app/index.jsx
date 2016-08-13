@@ -1,14 +1,23 @@
 import React from 'react';
 import {render} from 'react-dom';
-import Main from './main.jsx';
+import SearchFields from './SearchFields.jsx';
+import MapCanvas from './MapCanvas.jsx';
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      keyword: '',
+      address: '',
+      radius: '500'
+    }; 
+  }
   render () {
     return (
       <div>
-        <div id="gmap_canvas"></div>
-        <p>This is index.js</p>
-        <Main />
+        <h1>Find places!</h1>
+        <SearchFields />
+        <MapCanvas />
       </div>
 
     );
