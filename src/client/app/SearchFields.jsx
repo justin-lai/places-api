@@ -16,7 +16,11 @@ class SearchFields extends React.Component {
   handleRadiusChange(e) { this.setState( {radius: e.target.value })}
   handleSubmit(e) {
     e.preventDefault();
-
+    this.props.handleQuerySubmit({
+      keyword: this.state.keyword,
+      address: this.state.address,
+      radius: this.state.radius
+    });
   }
 
   render() {

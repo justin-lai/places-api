@@ -6,6 +6,7 @@ class MapCanvas extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props);
     let san_francisco = new google.maps.LatLng(37.773972, -122.431297);
 
     this.map = new google.maps.Map(document.getElementById('gmap_canvas'), {
@@ -13,24 +14,39 @@ class MapCanvas extends React.Component {
       zoom: 15
     });
 
-    const request = {
+    const options = {
       location: san_francisco,
-      radius: '500',
-      query: 'restaurant'
+      radius: this.props.radius || '500',
+      query: this.props.keyword || 'restaurant'
     };
 
+    this.searchMap(options);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let san_francisco = new google.maps.LatLng(37.773972, -122.431297);
+    
+    const options = {
+      location: san_francisco,
+      radius: nextProps.radius,
+      query: nextProps.keyword
+    };
+
+    this.searchMap(options);
+  }
+
+  searchMap(options) {
     let callback = (results, status) => {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         for (let i = 0; i < results.length; i++) {
           let place = results[i];
-          console.log('PLACE: ', place);
           this.createMarker(results[i]);
         }
       }
     }
     
-    // let service = new google.maps.places.PlacesService(this.map);
-    // service.textSearch(request, callback.bind(this));
+    let service = new google.maps.places.PlacesService(this.map);
+    service.textSearch(options, callback.bind(this));
   }
 
   createMarker(obj) {
