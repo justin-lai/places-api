@@ -25,7 +25,7 @@ class SearchFields extends React.Component {
 
   render() {
     return (
-      <div className="actions">
+      <div id="search-fields">
         <form className="gmap_form" onSubmit={this.handleSubmit.bind(this)}>
           <div className="button">
               <label htmlFor="gmap_keyword">Keyword (optional):</label>

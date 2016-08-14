@@ -1,6 +1,7 @@
 import React from 'react';
 import {render} from 'react-dom';
 import SearchFields from './SearchFields.jsx';
+import PlacesList from './PlacesList.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -11,11 +12,12 @@ class App extends React.Component {
       radius: '500',
       location: new google.maps.LatLng(37.773972, -122.431297), // San Francisco
       places: [],
-      markers: [],
-      infoWindows: []
+      currentPlace: null,
+      placeDetails: null
     }; 
+    this.markers = [];
+    this.infoWindows = [];
     this.geocoder = new google.maps.Geocoder();
-    this.findAddress = this.findAddress.bind(this);
   }
 
   componentDidMount() {
@@ -30,7 +32,26 @@ class App extends React.Component {
       keyword: params.keyword,
       address: params.address,
       radius: params.radius
-    }, this.findAddress);
+    }, this.findAddress.bind(this));
+  }
+
+  handleClickEntry(place) {
+    this.markers.forEach(mark => {
+      if (mark.id === place.id) {
+        const infoWindow = new google.maps.InfoWindow({
+          content: `<img src=${place.icon} />
+                    <p>${place.name}</p>
+                    <p>${place.formatted_address}</p>`
+        });
+        this.clearInfoWindows();
+
+        this.infoWindows.push(infoWindow);
+        infoWindow.open(this.map, mark);
+      }
+    })
+    this.setState({
+      currentPlace: place.place_id
+    }, this.getDetails.bind(this));
   }
 
   findAddress() {
@@ -61,7 +82,7 @@ class App extends React.Component {
 
   searchPlaces(options) {
     // searches for places given location, radius, and keyword query using Google Places text search API
-    let service = new google.maps.places.PlacesService(this.map);
+    const service = new google.maps.places.PlacesService(this.map);
 
     service.textSearch(options, (results, status) => {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
@@ -77,17 +98,17 @@ class App extends React.Component {
   }
 
   clearMarkers() {
-    for (let i in this.state.markers) {
-      this.state.markers[i].setMap(null);
+    for (let i in this.markers) {
+      this.markers[i].setMap(null);
     }
-    this.setState({ markers: [] });
-    this.setState({ infoWindows: [] });
+    this.markers = [];
+    this.infoWindows = [];
   }
 
   clearInfoWindows() {
-    for (let i in this.state.infoWindows) {
-      if (this.state.infoWindows[i].getMap()) {
-        this.state.infoWindows[i].close();
+    for (let i in this.infoWindows) {
+      if (this.infoWindows[i].getMap()) {
+        this.infoWindows[i].close();
       }
     }
   }
@@ -96,29 +117,54 @@ class App extends React.Component {
     const mark = new google.maps.Marker({
       position: place.geometry.location,
       map: this.map,
-      title: place.name
+      title: place.name,
+      id: place.id
     });
-    this.setState({ markers: this.state.markers.concat([mark]) });
+    this.markers.push(mark);
 
     const infoWindow = new google.maps.InfoWindow({
       content: `<img src=${place.icon} />
-                <h3>${place.name}</h3>
-                <h4>${place.formatted_address}</h4>`
+                <p>${place.name}</p>
+                <p>${place.formatted_address}</p>`
     });
 
     google.maps.event.addListener(mark, 'click', () => {
       this.clearInfoWindows();
       infoWindow.open(this.map, mark);
     });
-    this.setState({ infoWindows: this.state.infoWindows.concat([infoWindow]) });
+    this.infoWindows.push(infoWindow);
+  }
+
+  getDetails() {
+    const request = {
+      placeId: this.state.currentPlace
+    };
+    console.log(this.state.currentPlace);
+
+    const service = new google.maps.places.PlacesService(this.map);
+    service.getDetails(request, (details, status) => {
+      if (status == google.maps.places.PlacesServiceStatus.OK) {
+        this.setState({
+          placeDetails: details
+        })
+        console.log(details);
+      } else {
+        alert(`Details request failed: ${status}`);
+      }
+    });
   }
 
   render () {
     return (
       <section>
         <div id="content-container">
-          <h1>Find places!</h1>
-          <SearchFields handleQuerySubmit={this.handleQuerySubmit.bind(this)} />
+          <div id="content-top">
+            <h1>Find places!</h1>
+            <SearchFields handleQuerySubmit={this.handleQuerySubmit.bind(this)} />
+          </div>
+          <div id="content-bottom">
+            <PlacesList places={this.state.places} handleClickEntry={this.handleClickEntry.bind(this)} />
+          </div>
         </div>
         <div id="map-container">
           <div id="gmap_canvas"></div>

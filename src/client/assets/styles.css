@@ -1,24 +1,60 @@
+* {
+   margin: 0px;
+   padding: 0px;
+}
+
+body {
+  background-color: #2B2B2B;
+}
+
 #gmap_canvas {
   height: 100%;
-  min-width: 900px;
   position: relative;
 }
 
 section {
-    width: 98%;
-    height: 100%;
-    /*background: aqua;*/
-    margin: auto;
-    padding: 10px;
+  width: 960px;
+  height: 100%;
+  /*background: aqua;*/
+  margin: auto;
 }
 div#content-container {
-    width: 25%;
-    height: 100%;
-    background: #eee;
-    float: left;
+  width: 35%;
+  height: 100%;
+  float: left;
+  background-color: #F6F6F6;
 }
+
 div#map-container {
-    margin-left: 15%;
-    height: 100%;
-    /*background: black;*/
+  margin-left: 15%;
+  height: 100%;
+  /*background: black;*/
+}
+
+div#content-top {
+  height: 150px;
+  border-bottom: 2px double #DE1B1B;
+}
+
+div#content-bottom {
+  height: calc(100% - 150px);
+}
+
+ul#places-list {
+  height: 100%;
+}
+
+ul#places-list, 
+li.places-entry {
+  list-style: none;
+  /*background-color: #ddd;*/
+  overflow: auto;
+  margin: 0;
+  padding: 0;
+}
+
+
+li.places-entry:hover {
+  background-color: #b5e3f2;
+  cursor: pointer;
 }
