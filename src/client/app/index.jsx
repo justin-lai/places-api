@@ -2,6 +2,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import SearchFields from './SearchFields.jsx';
 import PlacesList from './PlacesList.jsx';
+import PlacesDetails from './PlacesDetails.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class App extends React.Component {
       location: new google.maps.LatLng(37.773972, -122.431297), // San Francisco
       places: [],
       currentPlace: null,
-      placeDetails: null
+      show: 'list'
     }; 
     this.markers = [];
     this.infoWindows = [];
@@ -40,8 +41,7 @@ class App extends React.Component {
       if (mark.id === place.id) {
         const infoWindow = new google.maps.InfoWindow({
           content: `<img src=${place.icon} />
-                    <p>${place.name}</p>
-                    <p>${place.formatted_address}</p>`
+                    <p>${place.name}</p>`
         });
         this.clearInfoWindows();
 
@@ -50,7 +50,7 @@ class App extends React.Component {
       }
     })
     this.setState({
-      currentPlace: place.place_id
+      currentPlace: place,
     }, this.getDetails.bind(this));
   }
 
@@ -63,7 +63,8 @@ class App extends React.Component {
         const addressCoords = results[0].geometry.location;
         this.map.setCenter(addressCoords);
         this.setState({
-          location: addressCoords
+          location: addressCoords,
+          show: 'list'
         });
    
         const options = {
@@ -124,35 +125,40 @@ class App extends React.Component {
 
     const infoWindow = new google.maps.InfoWindow({
       content: `<img src=${place.icon} />
-                <p>${place.name}</p>
-                <p>${place.formatted_address}</p>`
+                <p>${place.name}</p>`
     });
 
+    let context = this;
     google.maps.event.addListener(mark, 'click', () => {
       this.clearInfoWindows();
       infoWindow.open(this.map, mark);
+
+      context.setState({
+        currentPlace: place,
+      }, context.getDetails.bind(context));
     });
     this.infoWindows.push(infoWindow);
   }
 
   getDetails() {
     const request = {
-      placeId: this.state.currentPlace
+      placeId: this.state.currentPlace.place_id
     };
-    console.log(this.state.currentPlace);
 
     const service = new google.maps.places.PlacesService(this.map);
     service.getDetails(request, (details, status) => {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         this.setState({
-          placeDetails: details
+          currentPlace: details,
+          show: 'details'
         })
-        console.log(details);
       } else {
         alert(`Details request failed: ${status}`);
       }
     });
   }
+
+  returnToList() { this.setState({ show: 'list' }) }
 
   render () {
     return (
@@ -163,7 +169,10 @@ class App extends React.Component {
             <SearchFields handleQuerySubmit={this.handleQuerySubmit.bind(this)} />
           </div>
           <div id="content-bottom">
-            <PlacesList places={this.state.places} handleClickEntry={this.handleClickEntry.bind(this)} />
+            { this.state.show === 'list' ? 
+            <PlacesList places={this.state.places} handleClickEntry={this.handleClickEntry.bind(this)} /> :
+            <PlacesDetails place={this.state.currentPlace} returnToList={this.returnToList.bind(this)} />
+            }
           </div>
         </div>
         <div id="map-container">

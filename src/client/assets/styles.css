@@ -58,3 +58,9 @@ li.places-entry:hover {
   background-color: #b5e3f2;
   cursor: pointer;
 }
+
+.fake-link {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}

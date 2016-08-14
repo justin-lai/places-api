@@ -15,7 +15,7 @@ class PlacesEntry extends React.Component {
           <p>{place.rating}</p>
           <p>{place.formatted_address}</p>
           <p>{ new Array(place.price_level).join('$') }</p>
-          <img src={place.photos[0].getUrl({'maxWidth': 35, 'maxHeight': 35}) } />
+          <img src={place.photos ? place.photos[0].getUrl({'maxWidth': 35, 'maxHeight': 35}) : null } />
         </div>
       </li>
     )  
