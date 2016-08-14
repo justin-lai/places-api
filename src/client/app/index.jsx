@@ -1,7 +1,6 @@
 import React from 'react';
 import {render} from 'react-dom';
 import SearchFields from './SearchFields.jsx';
-import MapCanvas from './MapCanvas.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -11,7 +10,9 @@ class App extends React.Component {
       address: '',
       radius: '500',
       location: new google.maps.LatLng(37.773972, -122.431297), // San Francisco
-      places: []
+      places: [],
+      markers: [],
+      infoWindows: []
     }; 
     this.geocoder = new google.maps.Geocoder();
     this.findAddress = this.findAddress.bind(this);
@@ -43,14 +44,6 @@ class App extends React.Component {
         this.setState({
           location: addressCoords
         });
-
-        // // and then - add new custom marker
-        // var addrMarker = new google.maps.Marker({
-        //     position: addressCoords,
-        //     map: map,
-        //     title: results[0].formatted_address,
-        //     icon: 'marker.png'
-        // });
    
         const options = {
           location: this.state.location,
@@ -58,6 +51,7 @@ class App extends React.Component {
           query: this.state.keyword
         };
 
+        this.clearMarkers();
         this.searchPlaces(options);
       } else {
         alert(`Geocode failed: ${status}`);
@@ -74,8 +68,49 @@ class App extends React.Component {
         this.setState({
           places: results
         });
+
+        for (let i = 0; i < results.length; i++) {
+          this.createMarker(results[i]);
+        }
       }
     });
+  }
+
+  clearMarkers() {
+    for (let i in this.state.markers) {
+      this.state.markers[i].setMap(null);
+    }
+    this.setState({ markers: [] });
+    this.setState({ infoWindows: [] });
+  }
+
+  clearInfoWindows() {
+    for (let i in this.state.infoWindows) {
+      if (this.state.infoWindows[i].getMap()) {
+        this.state.infoWindows[i].close();
+      }
+    }
+  }
+
+  createMarker(place) {
+    const mark = new google.maps.Marker({
+      position: place.geometry.location,
+      map: this.map,
+      title: place.name
+    });
+    this.setState({ markers: this.state.markers.concat([mark]) });
+
+    const infoWindow = new google.maps.InfoWindow({
+      content: `<img src=${place.icon} />
+                <h3>${place.name}</h3>
+                <h4>${place.formatted_address}</h4>`
+    });
+
+    google.maps.event.addListener(mark, 'click', () => {
+      this.clearInfoWindows();
+      infoWindow.open(this.map, mark);
+    });
+    this.setState({ infoWindows: this.state.infoWindows.concat([infoWindow]) });
   }
 
   render () {
@@ -86,13 +121,7 @@ class App extends React.Component {
           <SearchFields handleQuerySubmit={this.handleQuerySubmit.bind(this)} />
         </div>
         <div id="map-container">
-          <MapCanvas
-            keyword={this.state.keyword}
-            location={this.state.location}
-            radius={this.state.radius}
-            places={this.state.places}
-            map={this.map}
-          />
+          <div id="gmap_canvas"></div>
         </div>
       </section>
 
