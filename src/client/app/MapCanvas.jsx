@@ -6,56 +6,74 @@ class MapCanvas extends React.Component {
     this.state = {
       markers: [],
       infoWindows: [],
+      location: new google.maps.LatLng(37.773972, -122.431297) // San Francisco
     };
+    this.geocoder = new google.maps.Geocoder();
   }
 
   componentDidMount() {
-    let san_francisco = new google.maps.LatLng(37.773972, -122.431297);
-
+    // centers the map on SF on initialization
     this.map = new google.maps.Map(document.getElementById('gmap_canvas'), {
-      center: san_francisco,
+      center: this.state.location,
       zoom: 15
     });
-
-    const options = {
-      location: san_francisco,
-      radius: this.props.radius || '500',
-      query: this.props.keyword || 'restaurant'
-    };
-
-    this.searchMap(options);
   }
 
   componentWillReceiveProps(nextProps) {
-    let san_francisco = new google.maps.LatLng(37.773972, -122.431297);
-
-    const options = {
-      location: san_francisco,
-      radius: nextProps.radius,
-      query: nextProps.keyword
-    };
-
-    this.searchMap(options);
+    this.findAddress(nextProps);
   }
 
-  searchMap(options) {
-    let callback = (results, status) => {
+  findAddress(queryParams) {
+    // converts address into Lat and Lng coordinates
+    this.geocoder.geocode( { 'address': queryParams.address}, (results, status) => {
+      if (status == google.maps.GeocoderStatus.OK) {
+
+        // center map at new address
+        var addressCoords = results[0].geometry.location;
+        this.map.setCenter(addressCoords);
+        this.setState({
+          location: addressCoords
+        });
+
+        // // and then - add new custom marker
+        // var addrMarker = new google.maps.Marker({
+        //     position: addressCoords,
+        //     map: map,
+        //     title: results[0].formatted_address,
+        //     icon: 'marker.png'
+        // });
+   
+        const options = {
+          location: addressCoords,
+          radius: queryParams.radius,
+          query: queryParams.keyword
+        };
+
+        this.searchPlaces(options);
+      } else {
+        alert(`Geocode failed: ${status}`);
+      }
+    });
+  }
+
+  searchPlaces(options) {
+    // searches for places given location, radius, and keyword query using Google Places text search API
+    let service = new google.maps.places.PlacesService(this.map);
+
+    service.textSearch(options, (results, status) => {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
         this.clearMarkers();
+
+        // create markers for each result found by Places API
         for (let i = 0; i < results.length; i++) {
           let place = results[i];
           this.createMarker(results[i]);
-          console.log('Place: ', place);
         }
-      }
-    }
-    
-    let service = new google.maps.places.PlacesService(this.map);
-    service.textSearch(options, callback.bind(this));
+      };
+    });
   }
 
   clearMarkers() {
-    console.log('CLEARING MARKERS');
     for (let i in this.state.markers) {
       this.state.markers[i].setMap(null);
     }
