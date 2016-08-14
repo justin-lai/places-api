@@ -40,6 +40,7 @@ div#content-top {
   width: 100%;
   height: 180px;
   border-bottom: 2px double #DE1B1B;
+  padding: 5px;
 }
 
 div#content-bottom {
@@ -60,10 +61,25 @@ li.places-entry {
   padding: 0;
 }
 
+li.places-entry {
+  height: 120px;
+  padding: 10px 0;
+  overflow: hidden;
+  border-bottom: 1px solid #ddd;
+}
 
 li.places-entry:hover {
   background-color: #b5e3f2;
   cursor: pointer;
+}
+
+div.entry-content-container {
+  height: 100%;
+  overflow: hidden;
+}
+
+.ellipsis { 
+  text-overflow: ellipsis;
 }
 
 .fake-link {
@@ -75,4 +91,28 @@ li.places-entry:hover {
 .no-padding {
    padding: 0 !important;
    margin: 0 !important;
+}
+
+img.place-entry-photo {
+  width: 100px;
+  height: 100px;
+}
+
+ul#weekday-hours-list, 
+li.hours-entry {
+  list-style: none;
+  /*background-color: #ddd;*/
+  overflow: auto;
+}
+
+li.hours-entry {
+  padding-left: 20px;
+}
+
+div#details-container {
+  padding: 15px;
+}
+
+img.details-photo {
+  max-height: 200px;
 }

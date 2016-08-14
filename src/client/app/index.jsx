@@ -171,7 +171,7 @@ class App extends React.Component {
     return (
       <section className="container">
         <div className="row">
-          <div id="content-container" className="col-md-3 no-padding">
+          <div id="content-container" className="col-md-4 no-padding">
             <div id="content-top">
               <h1>Find places!</h1>
               <SearchFields handleQuerySubmit={this.handleQuerySubmit.bind(this)} />
@@ -180,7 +180,7 @@ class App extends React.Component {
               {bottomContent}
             </div>
           </div>
-          <div id="map-container" className="col-md-9 no-padding">
+          <div id="map-container" className="col-md-8 no-padding">
             <div id="gmap_canvas"></div>
           </div>
         </div>

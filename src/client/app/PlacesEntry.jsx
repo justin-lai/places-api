@@ -8,18 +8,32 @@ class PlacesEntry extends React.Component {
   render() {
     const place = this.props.place;
     console.log(place);
-    const placeName = typeof place.name !== undefined ? place.name : undefined;
-    const placeRating = typeof place.rating !== undefined ? new Array(place.price_level).join('$') : undefined;
-    const placeAddress = typeof place.formatted_address !== undefined ? place.formatted_address : undefined;
-    const placePhoto = Array.isArray(place.photos) ? place.photos[0].getUrl({'maxWidth': 35, 'maxHeight': 35}) : null;
+    const placeName = place.name !== undefined ? place.name : null;
+    const placeAddress = place.formatted_address !== undefined ? place.formatted_address : null;
+    const placePhoto = Array.isArray(place.photos) ? place.photos[0].getUrl({'maxWidth': 100, 'maxHeight': 100}) : '../client/assets/noimage.jpg';
+    let placeCombinedDetails = [];
+    if (place.rating !== undefined) {
+      const placeRating = `${place.rating} \u2605`;
+      placeCombinedDetails.push(placeRating);
+    }
+    if (place.price_level !== undefined) {
+      const placePriceLevel = new Array(place.price_level).join('$')
+      placeCombinedDetails.push(placePriceLevel);
+    }
+    if (place.opening_hours) {
+      const openNow = place.opening_hours.open_now ? 'Open now' : 'Closed'
+      placeCombinedDetails.push(openNow);
+    }
 
     return (
-      <li className="places-entry" onClick={()=>{ this.props.handleClickEntry(place) }} >
-        <div>
-          <p>{placeName}</p>
-          <p>{placeRating}</p>
-          <p>{placeAddress}</p>
-          <img src={placePhoto} />
+      <li className="places-entry row" onClick={()=>{ this.props.handleClickEntry(place) }} >
+        <div className="entry-content-container col-xs-12 col-md-8">
+          <p><strong>{placeName}</strong></p>
+          <p className="small">{placeCombinedDetails.join(' \xb7 ')}</p>
+          <p className="small">{placeAddress}</p>
+        </div>
+        <div className="col-xs-12 col-md-4">
+          <img className="place-entry-photo" src={placePhoto} />
         </div>
       </li>
     )  
