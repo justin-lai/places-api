@@ -27,13 +27,13 @@ class SearchFields extends React.Component {
     return (
       <div id="search-fields">
         <form className="gmap_form" onSubmit={this.handleSubmit.bind(this)}>
-          <div className="button">
-              <label htmlFor="gmap_keyword">Keyword (optional):</label>
-              <input id="gmap_keyword" type="text" name="gmap_keyword" onChange={this.handleKeywordChange.bind(this)} />
+          <div className="input-group input-group-sm">
+            <span className="input-group-addon" id="location-addon">Currently in</span>
+            <input id="gmap_where" className="form-control" type="text" name="gmap_where" onChange={this.handleAddressChange.bind(this)} placeholder="San Francisco, CA"/>
           </div>
-          <div className="button">
-            <label htmlFor="gmap_where">Near:</label>
-            <input id="gmap_where" type="text" name="gmap_where" onChange={this.handleAddressChange.bind(this)} />
+          <div className="input-group input-group-sm">
+            <span className="input-group-addon" id="keyword-addon">Looking for</span>
+            <input id="gmap_keyword" className="form-control" type="text" name="gmap_keyword" onChange={this.handleKeywordChange.bind(this)} placeholder="Restaurants, Schools, ATMs, ..." />
           </div>
 
           <div className="button">

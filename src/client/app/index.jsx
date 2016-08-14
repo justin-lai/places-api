@@ -161,22 +161,28 @@ class App extends React.Component {
   returnToList() { this.setState({ show: 'list' }) }
 
   render () {
+    let bottomContent;
+    if (this.state.show === 'list') {
+      bottomContent = <PlacesList places={this.state.places} handleClickEntry={this.handleClickEntry.bind(this)} />;
+    } else {
+      bottomContent = <PlacesDetails place={this.state.currentPlace} returnToList={this.returnToList.bind(this)} />;
+    }
+
     return (
-      <section>
-        <div id="content-container">
-          <div id="content-top">
-            <h1>Find places!</h1>
-            <SearchFields handleQuerySubmit={this.handleQuerySubmit.bind(this)} />
+      <section className="container">
+        <div className="row">
+          <div id="content-container" className="col-md-3 no-padding">
+            <div id="content-top">
+              <h1>Find places!</h1>
+              <SearchFields handleQuerySubmit={this.handleQuerySubmit.bind(this)} />
+            </div>
+            <div id="content-bottom">
+              {bottomContent}
+            </div>
           </div>
-          <div id="content-bottom">
-            { this.state.show === 'list' ? 
-            <PlacesList places={this.state.places} handleClickEntry={this.handleClickEntry.bind(this)} /> :
-            <PlacesDetails place={this.state.currentPlace} returnToList={this.returnToList.bind(this)} />
-            }
+          <div id="map-container" className="col-md-9 no-padding">
+            <div id="gmap_canvas"></div>
           </div>
-        </div>
-        <div id="map-container">
-          <div id="gmap_canvas"></div>
         </div>
       </section>
 
