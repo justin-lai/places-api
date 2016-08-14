@@ -45,7 +45,11 @@ class SearchFields extends React.Component {
               <option value="5000">5000</option>
             </select>
           </div>
-          <input type="submit" value="Search" />
+          <div className="text-center">
+            <button type="submit" className="btn btn-primary btn-lg search-button">
+              <span className="glyphicon glyphicon-search large"></span> Search
+            </button>
+          </div>
         </form>
       </div>
     )

@@ -94,6 +94,8 @@ class App extends React.Component {
         for (let i = 0; i < results.length; i++) {
           this.createMarker(results[i]);
         }
+      } else {
+        alert('No results found!');
       }
     });
   }
@@ -173,7 +175,7 @@ class App extends React.Component {
         <div className="row">
           <div id="content-container" className="col-md-4 no-padding">
             <div id="content-top">
-              <h1>Find places!</h1>
+              <h1 className="title">What's Around!</h1>
               <SearchFields handleQuerySubmit={this.handleQuerySubmit.bind(this)} />
             </div>
             <div id="content-bottom">
