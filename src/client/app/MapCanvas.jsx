@@ -3,10 +3,13 @@ import React from 'react';
 class MapCanvas extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      markers: [],
+      infoWindows: [],
+    };
   }
 
   componentDidMount() {
-    console.log(this.props);
     let san_francisco = new google.maps.LatLng(37.773972, -122.431297);
 
     this.map = new google.maps.Map(document.getElementById('gmap_canvas'), {
@@ -25,7 +28,7 @@ class MapCanvas extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     let san_francisco = new google.maps.LatLng(37.773972, -122.431297);
-    
+
     const options = {
       location: san_francisco,
       radius: nextProps.radius,
@@ -38,9 +41,11 @@ class MapCanvas extends React.Component {
   searchMap(options) {
     let callback = (results, status) => {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
+        this.clearMarkers();
         for (let i = 0; i < results.length; i++) {
           let place = results[i];
           this.createMarker(results[i]);
+          console.log('Place: ', place);
         }
       }
     }
@@ -49,27 +54,42 @@ class MapCanvas extends React.Component {
     service.textSearch(options, callback.bind(this));
   }
 
+  clearMarkers() {
+    console.log('CLEARING MARKERS');
+    for (let i in this.state.markers) {
+      this.state.markers[i].setMap(null);
+    }
+    this.setState({ markers: [] });
+    this.setState({ infoWindows: [] });
+  }
+
+  clearInfoWindows() {
+    for (let i in this.state.infoWindows) {
+      if (this.state.infoWindows[i].getMap()) {
+        this.state.infoWindows[i].close();
+      }
+    }
+  }
+
   createMarker(obj) {
-    // prepare new Marker object
-        const mark = new google.maps.Marker({
-            position: obj.geometry.location,
-            map: this.map,
-            title: obj.name
-        });
-        // markers.push(mark);
+    const mark = new google.maps.Marker({
+      position: obj.geometry.location,
+      map: this.map,
+      title: obj.name
+    });
+    this.setState({ markers: this.state.markers.concat([mark]) });
 
-        // prepare info window
-        const infowindow = new google.maps.InfoWindow({
-            content: '<img src="' + obj.icon + '" /><font style="color:#000;">' + obj.name + 
-            '<br />Rating: ' + obj.rating + '<br />Vicinity: ' + obj.vicinity + '</font>'
-        });
+    const infoWindow = new google.maps.InfoWindow({
+      content: `<img src=${obj.icon} />
+                <h3>${obj.name}</h3>
+                <h4>${obj.formatted_address}</h4>`
+    });
 
-        // add event handler to current marker
-        google.maps.event.addListener(mark, 'click', function() {
-        //     clearInfos();
-            infowindow.open(this.map, mark);
-        });
-        // infos.push(infowindow);
+    google.maps.event.addListener(mark, 'click', () => {
+      this.clearInfoWindows();
+      infoWindow.open(this.map, mark);
+    });
+    this.setState({ infoWindows: this.state.infoWindows.concat([infoWindow]) });
   }
 
   render() {
