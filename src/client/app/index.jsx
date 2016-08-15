@@ -1,3 +1,4 @@
+/* global google */
 import React from 'react';
 import { render } from 'react-dom';
 import bindAll from 'lodash.bindall';
@@ -125,7 +126,6 @@ class App extends React.Component {
     // converts address into Lat and Lng coordinates
     this.geocoder.geocode({ address: this.state.address }, (results, status) => {
       if (status === google.maps.GeocoderStatus.OK) {
-
         // center map at new address
         const addressCoords = results[0].geometry.location;
         this.map.setCenter(addressCoords);
@@ -181,7 +181,7 @@ class App extends React.Component {
     });
     this.setState({
       currentPlace: place,
-    }, this.getDetails;
+    }, this.getDetails);
   }
 
   returnToList() { this.setState({ show: 'list' }); }
@@ -189,9 +189,19 @@ class App extends React.Component {
   render() {
     let bottomContent;
     if (this.state.show === 'list') {
-      bottomContent = <PlacesList places={this.state.places} handleClickEntry={this.handleClickEntry} />;
+      bottomContent = (
+        <PlacesList
+          places={this.state.places}
+          handleClickEntry={this.handleClickEntry}
+        />
+      );
     } else if (this.state.show === 'details') {
-      bottomContent = <PlacesDetails place={this.state.currentPlace} returnToList={this.returnToList} />;
+      bottomContent = (
+        <PlacesDetails
+          place={this.state.currentPlace}
+          returnToList={this.returnToList}
+        />
+      );
     } else if (this.state.show === 'addressError') {
       bottomContent = <h4 className="error-msg">Could not locate specified address</h4>;
     } else if (this.state.show === 'noResults') {
