@@ -154,3 +154,9 @@ img.details-photo {
 div#search-fields {
   margin-top: 10px;
 }
+
+.error-msg {
+  text-align: center;
+  color: #a9a9a9;
+  margin: 50px auto;
+}

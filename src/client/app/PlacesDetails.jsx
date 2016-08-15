@@ -7,7 +7,6 @@ class PlacesDetails extends React.Component {
 
   render() {
     const place = this.props.place;
-    console.log(place)
     const placeName = place.name !== undefined ? place.name : null;
     const placeAddress = place.formatted_address !== undefined ? place.formatted_address : null;
     const placePhoneNumber = place.formatted_phone_number !== undefined ? place.formatted_phone_number : 'Phone not available';

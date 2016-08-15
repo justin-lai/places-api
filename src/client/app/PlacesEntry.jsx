@@ -7,7 +7,6 @@ class PlacesEntry extends React.Component {
 
   render() {
     const place = this.props.place;
-    console.log(place);
     const placeName = place.name !== undefined ? place.name : null;
     const placeAddress = place.formatted_address !== undefined ? place.formatted_address : null;
     const placePhoto = Array.isArray(place.photos) ? place.photos[0].getUrl({'maxWidth': 100, 'maxHeight': 100}) : '../client/assets/noimage.jpg';

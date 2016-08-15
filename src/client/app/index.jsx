@@ -67,16 +67,25 @@ class App extends React.Component {
           location: addressCoords,
           show: 'list'
         });
-   
-        const options = {
-          location: this.state.location,
-          query: this.state.keyword
-        };
+        
+        if (this.state.keyword) {
+          const options = {
+            location: this.state.location,
+            query: this.state.keyword
+          };
 
-        this.clearMarkers();
-        this.searchPlaces(options);
+          this.clearMarkers();
+          this.searchPlaces(options);
+        } else {
+          this.setState({
+            show: 'noResults'
+          })
+        }
       } else {
-        alert(`Geocode failed: ${status}`);
+        console.log(`Geocode failed: ${status}`);
+        this.setState({
+          show: 'addressError'
+        })
       }
     });
   }
@@ -95,7 +104,10 @@ class App extends React.Component {
           this.createMarker(results[i]);
         }
       } else {
-        alert('No results found!');
+        console.log(`Text search failed: ${status}`);
+        this.setState({
+          show: 'noResults'
+        })
       }
     });
   }
@@ -169,8 +181,12 @@ class App extends React.Component {
     let bottomContent;
     if (this.state.show === 'list') {
       bottomContent = <PlacesList places={this.state.places} handleClickEntry={this.handleClickEntry.bind(this)} />;
-    } else {
+    } else if (this.state.show === 'details') {
       bottomContent = <PlacesDetails place={this.state.currentPlace} returnToList={this.returnToList.bind(this)} />;
+    } else if (this.state.show === 'addressError') {
+      bottomContent = <h4 className="error-msg">Could not locate specified address</h4>;
+    } else if (this.state.show === 'noResults') {
+      bottomContent = <h4 className="error-msg">No search results found</h4>
     }
 
     return (
