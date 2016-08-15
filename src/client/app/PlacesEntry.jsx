@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 
 const PlacesEntry = (props) => {
+  // verifies place content is available from Places API response
   const place = props.place;
   const placeName = place.name !== undefined ? place.name : null;
   const placeAddress = place.formatted_address !== undefined ? place.formatted_address : null;

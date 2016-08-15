@@ -36,6 +36,7 @@ class App extends React.Component {
     });
   }
 
+  // gets additional information for the currently selected place given a its Place ID
   getDetails() {
     const request = {
       placeId: this.state.currentPlace.place_id,
@@ -54,8 +55,8 @@ class App extends React.Component {
     });
   }
 
+  // searches for places given location and keyword query using Google Places text search API
   searchPlaces(options) {
-    // searches for places given location and keyword query using Google Places text search API
     const service = new google.maps.places.PlacesService(this.map);
 
     service.textSearch(options, (results, status) => {
@@ -76,6 +77,7 @@ class App extends React.Component {
     });
   }
 
+  // removes all current markers on the map canvas
   clearMarkers() {
     for (let i = 0; i < this.markers.length; i++) {
       this.markers[i].setMap(null);
@@ -84,6 +86,7 @@ class App extends React.Component {
     this.infoWindows = [];
   }
 
+  // removes all information windows on the map canvas
   clearInfoWindows() {
     for (let i = 0; i < this.infoWindows.length; i++) {
       if (this.infoWindows[i].getMap()) {
@@ -92,6 +95,10 @@ class App extends React.Component {
     }
   }
 
+  /*
+    adds a marker pin on the map canvas given its place information and
+    adds its corresponding information window click event listener
+  */
   createMarker(place) {
     const mark = new google.maps.Marker({
       position: place.geometry.location,
@@ -121,12 +128,10 @@ class App extends React.Component {
     this.infoWindows.push(infoWindow);
   }
 
-
+  // converts the user's address input into Lat and Lng coords and centers the map at that location
   findAddress() {
-    // converts address into Lat and Lng coordinates
     this.geocoder.geocode({ address: this.state.address }, (results, status) => {
       if (status === google.maps.GeocoderStatus.OK) {
-        // center map at new address
         const addressCoords = results[0].geometry.location;
         this.map.setCenter(addressCoords);
         this.setState({
@@ -134,6 +139,7 @@ class App extends React.Component {
           show: 'list',
         });
 
+        // if a keyword search was included, invoke searchPlaces to utilize Places Text Search API
         if (this.state.keyword) {
           const options = {
             location: this.state.location,
@@ -156,6 +162,7 @@ class App extends React.Component {
     });
   }
 
+  // function prop passed to SearchFields component to handle user inputs for keyword and address
   handleQuerySubmit(params) {
     this.setState({
       keyword: params.keyword,
@@ -163,7 +170,9 @@ class App extends React.Component {
     }, this.findAddress);
   }
 
+  // function prop passed to PlacesList/PlacesEntry to handle user selection of a specific place
   handleClickEntry(place) {
+    // iterate through markers to trigger click event on marker corresponding to clicked place entry
     this.markers.forEach(mark => {
       if (mark.id === place.id) {
         const infoWindow = new google.maps.InfoWindow({
@@ -184,6 +193,7 @@ class App extends React.Component {
     }, this.getDetails);
   }
 
+  // function prop passed to PlacesDetails to re-show list view
   returnToList() { this.setState({ show: 'list' }); }
 
   render() {

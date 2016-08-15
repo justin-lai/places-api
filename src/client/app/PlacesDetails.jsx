@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 
 const PlacesDetails = (props) => {
+  // verifies place content is available from Places API response
   const place = props.place;
   const placeName = place.name !== undefined ? place.name : null;
   const placeAddress = place.formatted_address !== undefined ? place.formatted_address : null;
@@ -34,13 +35,9 @@ const PlacesDetails = (props) => {
 
   return (
     <div id="details-container">
-      <a
-        className="return-link"
-        href="#"
-        onClick={props.returnToList}
-      >
+      <button className="return-link small" onClick={props.returnToList}>
         Return to list &#8617;
-      </a>
+      </button>
       <img className="details-photo" src={placePhoto} alt={placeName} />
       <h2 className="place-details-name"><strong>{placeName}</strong></h2>
       { place.website ?
