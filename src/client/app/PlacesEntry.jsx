@@ -28,9 +28,9 @@ class PlacesEntry extends React.Component {
     return (
       <li className="places-entry row" onClick={()=>{ this.props.handleClickEntry(place) }} >
         <div className="entry-content-container col-xs-12 col-md-8">
-          <p><strong>{placeName}</strong></p>
-          <p className="small">{placeCombinedDetails.join(' \xb7 ')}</p>
-          <p className="small">{placeAddress}</p>
+          <p className="place-entry-name"><strong>{placeName}</strong></p>
+          <p className="place-entry-details small">{placeCombinedDetails.join(' \xb7 ')}</p>
+          <p className="place-entry-address small">{placeAddress}</p>
         </div>
         <div className="col-xs-12 col-md-4">
           <img className="place-entry-photo" src={placePhoto} />

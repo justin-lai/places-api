@@ -38,11 +38,11 @@ class PlacesDetails extends React.Component {
       <div id="details-container">
         <a className="return-link" href="javascript:void(0)" onClick={this.props.returnToList}>Return to list &#8617;</a>
         <img className="details-photo" src={placePhoto} />
-        <h2><strong>{placeName}</strong></h2>
-        { place.website ? <a className="small" href={place.website}>{place.website}</a> : null }
-        <p className="small">{placeAddress}</p>
-        <p className="small">{placePhoneNumber}</p>
-        <p className="small">{placeCombinedDetails.join(' \xb7 ')}</p>
+        <h2 className="place-details-name"><strong>{placeName}</strong></h2>
+        { place.website ? <a className="place-details-website small" href={place.website}>{place.website}</a> : null }
+        <p className="place-details-address small">{placeAddress}</p>
+        <p className="place-details-phone small">{placePhoneNumber}</p>
+        <p className="place-details-combined small">{placeCombinedDetails.join(' \xb7 ')}</p>
         {openNow}
         {weekdayText}
       </div>

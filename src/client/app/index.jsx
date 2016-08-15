@@ -10,7 +10,6 @@ class App extends React.Component {
     this.state = {
       keyword: '',
       address: '',
-      radius: '500',
       location: new google.maps.LatLng(37.773972, -122.431297), // San Francisco
       places: [],
       currentPlace: null,
@@ -32,7 +31,6 @@ class App extends React.Component {
     this.setState({
       keyword: params.keyword,
       address: params.address,
-      radius: params.radius
     }, this.findAddress.bind(this));
   }
 
@@ -40,8 +38,11 @@ class App extends React.Component {
     this.markers.forEach(mark => {
       if (mark.id === place.id) {
         const infoWindow = new google.maps.InfoWindow({
-          content: `<img src=${place.icon} />
-                    <p>${place.name}</p>`
+          content: `<img class="info-icon" src=${place.icon} />
+                    <div class="info-content-container">
+                      <p class="info-name"><strong>${place.name}</strong></p>
+                      <p class="info-address small">${place.formatted_address}</p>
+                    </div>`
         });
         this.clearInfoWindows();
 
@@ -69,7 +70,6 @@ class App extends React.Component {
    
         const options = {
           location: this.state.location,
-          radius: this.state.radius,
           query: this.state.keyword
         };
 
@@ -82,7 +82,7 @@ class App extends React.Component {
   }
 
   searchPlaces(options) {
-    // searches for places given location, radius, and keyword query using Google Places text search API
+    // searches for places given location and keyword query using Google Places text search API
     const service = new google.maps.places.PlacesService(this.map);
 
     service.textSearch(options, (results, status) => {
@@ -126,8 +126,11 @@ class App extends React.Component {
     this.markers.push(mark);
 
     const infoWindow = new google.maps.InfoWindow({
-      content: `<img src=${place.icon} />
-                <p>${place.name}</p>`
+      content: `<img class="info-icon" src=${place.icon} />
+                <div class="info-content-container">
+                  <p class="info-name"><strong>${place.name}</strong></p>
+                  <p class="info-address small">${place.formatted_address}</p>
+                </div>`
     });
 
     let context = this;
@@ -173,7 +176,7 @@ class App extends React.Component {
     return (
       <section className="container">
         <div className="row">
-          <div id="content-container" className="col-md-4 no-padding">
+          <div id="content-container" className="col-xs-4 col-md-4 no-padding">
             <div id="content-top">
               <h1 className="title">What's Around!</h1>
               <SearchFields handleQuerySubmit={this.handleQuerySubmit.bind(this)} />
@@ -182,7 +185,7 @@ class App extends React.Component {
               {bottomContent}
             </div>
           </div>
-          <div id="map-container" className="col-md-8 no-padding">
+          <div id="map-container" className="col-xs-8 col-md-8 no-padding">
             <div id="gmap_canvas"></div>
           </div>
         </div>

@@ -17,6 +17,8 @@ input:-webkit-autofill:active {
 h1 {
   margin: 0 !important;
   padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 body {
@@ -26,38 +28,32 @@ body {
 
 #gmap_canvas {
   height: 100%;
-  /*position: relative;*/
 }
 
 section {
   width: 960px;
   height: 100%;
-  /*background: aqua;*/
   margin: auto;
 }
 div#content-container {
-  /*width: 35%;*/
   height: 100%;
-  float: left;
   background-color: #FFF;
 }
 
 div#map-container {
-  /*margin-left: 15%;*/
   height: 100%;
-  /*background: black;*/
 }
 
 div#content-top {
   width: 100%;
-  height: 210px;
+  height: 200px;
   border-bottom: 5px double #2B2B2B;
   padding: 5px;
 }
 
 div#content-bottom {
   width: 100%;
-  height: calc(100% - 210px);
+  height: calc(100% - 200px);
 }
 
 ul#places-list {
@@ -67,7 +63,6 @@ ul#places-list {
 ul#places-list, 
 li.places-entry {
   list-style: none;
-  /*background-color: #ddd;*/
   overflow: auto;
   margin: 0;
   padding: 0;
@@ -89,16 +84,6 @@ div.entry-content-container {
   height: 100%;
   overflow: hidden;
 }
-
-.ellipsis { 
-  text-overflow: ellipsis;
-}
-
-/*.fake-link {
-    color: blue;
-    text-decoration: underline;
-    cursor: pointer;
-}*/
 
 .return-link {
   display: block;
@@ -142,5 +127,30 @@ img.details-photo {
 
 .search-button {
   background-color: #DE1B1B !important;
-  border-color: #C50202 !important;
+  border: 3px solid #DE1B1B !important;
+  margin: 10px 0;
+}
+.search-button:hover {
+  background-color: white !important;
+  color: #DE1B1B !important;
+}
+
+.info-icon {
+  height: 30px;
+  padding-top: 5px;
+}
+.info-address {
+  color: #333;
+}
+.info-name, .info-address {
+  margin: 0;
+  padding: 0;  
+}
+.info-content-container {
+  float: right;
+  margin-left: 5px;
+}
+
+div#search-fields {
+  margin-top: 10px;
 }
