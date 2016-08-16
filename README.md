@@ -10,5 +10,5 @@ Try it now on my github projects page: [https://justin-lai.github.io/places-api/
 - **Webpack** - module and static asset bundler
 - **Babel** - ES6/JSX transpiler 
 - **Bootstrap** - CSS framework for layout, styling, etc.
-- **ESLint** - code linter in association w/ AirBnB style guide
+- **ESLint** - code linter configured with AirBnB style guide
 - **Google Maps/Places API** - Map, Markers, Information Windows, Text Search, Geocoder, Details, Photos
