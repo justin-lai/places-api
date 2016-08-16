@@ -1,5 +1,7 @@
 # places-api
 
+<img src="https://justin-lai.github.io/places-api/src/client/assets/README-img.jpg" alt="app-screenshot" width="640" height="400"/>
+
 ### Summary
 A JavaScript interface powered by Google Maps and Places API. Given a user-specified location and search query, this application returns a list of interactive results, place details, and geolocation markers.
 
